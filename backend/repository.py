@@ -20,6 +20,8 @@ SQL_BUSCAR_ENTRE_FECHAS = f"SELECT {COLUMNAS_EVENTO} FROM eventos WHERE fecha BE
 
 SQL_ACTUALIZAR_EVENTO = "UPDATE eventos SET nombre=?,fecha=?,hora=?,descripcion=?,aviso_previo_enviado=?,aviso_dia_enviado=? WHERE id = ?"
 
+SQL_ELIMINAR_EVENTO = "DELETE FROM eventos WHERE id = ?"
+
 
 def _hora_a_texto(hora: time | None) -> str | None:
     return None if hora is None else hora.isoformat(timespec="minutes")
@@ -111,5 +113,12 @@ def actualizar(evento):
             evento.id,
         ),
     )
+    con.commit()
+    con.close()
+
+
+def eliminar(id):
+    con = obtener_conexion()
+    con.execute(SQL_ELIMINAR_EVENTO, (id,))
     con.commit()
     con.close()
