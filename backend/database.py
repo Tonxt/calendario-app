@@ -1,5 +1,7 @@
 import sqlite3
-#pasar conexion y ruta a constantes
+
+# pasar conexion y ruta a constantes
+
 
 def obtener_conexion():
     return sqlite3.connect("data/calendario.db")
