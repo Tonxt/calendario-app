@@ -22,6 +22,18 @@ SQL_ACTUALIZAR_EVENTO = "UPDATE eventos SET nombre=?,fecha=?,hora=?,descripcion=
 
 SQL_ELIMINAR_EVENTO = "DELETE FROM eventos WHERE id = ?"
 
+SQL_BUSCAR_AVISOS_PREVIOS_PENDIENTES = f"SELECT {COLUMNAS_EVENTO} FROM eventos WHERE fecha = ? AND aviso_previo_enviado = 0"
+
+SQL_BUSCAR_AVISOS_DIA_PENDIENTES = (
+    f"SELECT {COLUMNAS_EVENTO} FROM eventos WHERE fecha = ? AND aviso_dia_enviado = 0"
+)
+
+SQL_MARCAR_AVISO_PREVIO_ENVIADO = (
+    "UPDATE eventos SET aviso_previo_enviado=1 WHERE id = ?"
+)
+
+SQL_MARCAR_AVISO_DIA_ENVIADO = "UPDATE eventos SET aviso_dia_enviado=1 WHERE id = ?"
+
 
 def _hora_a_texto(hora: time | None) -> str | None:
     return None if hora is None else hora.isoformat(timespec="minutes")
@@ -120,5 +132,43 @@ def actualizar(evento):
 def eliminar(id):
     con = obtener_conexion()
     con.execute(SQL_ELIMINAR_EVENTO, (id,))
+    con.commit()
+    con.close()
+
+
+def buscar_avisos_previos_pendientes(fecha):
+    con = obtener_conexion()
+    consulta = con.execute(
+        SQL_BUSCAR_AVISOS_PREVIOS_PENDIENTES,
+        (fecha.isoformat(),),
+    )
+    lista = consulta.fetchall()
+    con.close()
+    eventos = [_fila_a_evento(fila) for fila in lista]
+    return eventos
+
+
+def buscar_avisos_dia_pendientes(fecha):
+    con = obtener_conexion()
+    consulta = con.execute(
+        SQL_BUSCAR_AVISOS_DIA_PENDIENTES,
+        (fecha.isoformat(),),
+    )
+    lista = consulta.fetchall()
+    con.close()
+    eventos = [_fila_a_evento(fila) for fila in lista]
+    return eventos
+
+
+def marcar_aviso_previo_enviado(id):
+    con = obtener_conexion()
+    con.execute(SQL_MARCAR_AVISO_PREVIO_ENVIADO, (id,))
+    con.commit()
+    con.close()
+
+
+def marcar_aviso_dia_enviado(id):
+    con = obtener_conexion()
+    con.execute(SQL_MARCAR_AVISO_DIA_ENVIADO, (id,))
     con.commit()
     con.close()

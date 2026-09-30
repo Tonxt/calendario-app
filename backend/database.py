@@ -1,10 +1,11 @@
 import sqlite3
+from pathlib import Path
 
-# no olvidar constantes
+RUTA_BD = Path(__file__).resolve().parent.parent / "data" / "calendario.db"
 
 
 def obtener_conexion():
-    return sqlite3.connect("data/calendario.db")
+    return sqlite3.connect(RUTA_BD)
 
 
 def crear_tablas():
