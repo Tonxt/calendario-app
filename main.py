@@ -1,8 +1,3 @@
-from backend.models import Evento
-from datetime import date
+from backend.database import crear_tablas
 
-fecha = date(2026, 9, 12)
-dentista = Evento("dentista", fecha)
-
-
-print(vars(dentista))
+crear_tablas()
