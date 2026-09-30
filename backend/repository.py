@@ -16,6 +16,10 @@ SQL_BUSCAR_POR_FECHA = (
     f"SELECT {COLUMNAS_EVENTO} FROM eventos WHERE fecha = ? ORDER BY hora"
 )
 
+SQL_BUSCAR_ENTRE_FECHAS = f"SELECT {COLUMNAS_EVENTO} FROM eventos WHERE fecha BETWEEN ? AND ? ORDER BY fecha, hora"
+
+SQL_ACTUALIZAR_EVENTO = "UPDATE eventos SET nombre=?,fecha=?,hora=?,descripcion=?,aviso_previo_enviado=?,aviso_dia_enviado=? WHERE id = ?"
+
 
 def _hora_a_texto(hora: time | None) -> str | None:
     return None if hora is None else hora.isoformat(timespec="minutes")
@@ -80,3 +84,32 @@ def buscar_por_fecha(fecha):
     con.close()
     eventos = [_fila_a_evento(fila) for fila in lista]
     return eventos
+
+
+def buscar_entre_fechas(desde, hasta):
+    con = obtener_conexion()
+    consulta = con.execute(
+        SQL_BUSCAR_ENTRE_FECHAS, (desde.isoformat(), hasta.isoformat())
+    )
+    lista = consulta.fetchall()
+    con.close()
+    eventos = [_fila_a_evento(fila) for fila in lista]
+    return eventos
+
+
+def actualizar(evento):
+    con = obtener_conexion()
+    con.execute(
+        SQL_ACTUALIZAR_EVENTO,
+        (
+            evento.nombre,
+            evento.fecha.isoformat(),
+            _hora_a_texto(evento.hora),
+            evento.descripcion,
+            evento.aviso_previo_enviado,
+            evento.aviso_dia_enviado,
+            evento.id,
+        ),
+    )
+    con.commit()
+    con.close()
