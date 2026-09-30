@@ -43,7 +43,7 @@ def _texto_a_hora(hora: str | None) -> time | None:
     return None if hora is None else time.fromisoformat(hora)
 
 
-def _fila_a_evento(fila) -> Evento:
+def _fila_a_evento(fila: tuple) -> Evento:
     fecha = date.fromisoformat(fila[2])
     hora = _texto_a_hora(fila[3])
     aviso_previo_enviado = bool(fila[5])
@@ -60,15 +60,15 @@ def _fila_a_evento(fila) -> Evento:
     return evento
 
 
-def _buscar_eventos(sql,valores):
+def _buscar_eventos(sql: str, valores: tuple) -> list[Evento]:
     con = obtener_conexion()
-    consulta = con.execute(sql,valores)
+    consulta = con.execute(sql, valores)
     lista_consulta = consulta.fetchall()
     con.close()
     eventos = [_fila_a_evento(fila) for fila in lista_consulta]
     return eventos
-    
-    
+
+
 def guardar(evento):
     con = obtener_conexion()
     insercion = con.execute(
@@ -98,11 +98,13 @@ def buscar_por_id(id):
 
 
 def buscar_por_fecha(fecha):
-    return _buscar_eventos(SQL_BUSCAR_POR_FECHA,(fecha.isoformat(),))
+    return _buscar_eventos(SQL_BUSCAR_POR_FECHA, (fecha.isoformat(),))
 
 
 def buscar_entre_fechas(desde, hasta):
-    return _buscar_eventos(SQL_BUSCAR_ENTRE_FECHAS,(desde.isoformat(),hasta.isoformat()))
+    return _buscar_eventos(
+        SQL_BUSCAR_ENTRE_FECHAS, (desde.isoformat(), hasta.isoformat())
+    )
 
 
 def actualizar(evento):
@@ -131,10 +133,11 @@ def eliminar(id):
 
 
 def buscar_avisos_previos_pendientes(fecha):
-    return _buscar_eventos(SQL_BUSCAR_AVISOS_PREVIOS_PENDIENTES,(fecha.isoformat(),))
+    return _buscar_eventos(SQL_BUSCAR_AVISOS_PREVIOS_PENDIENTES, (fecha.isoformat(),))
+
 
 def buscar_avisos_dia_pendientes(fecha):
-    return _buscar_eventos(SQL_BUSCAR_AVISOS_DIA_PENDIENTES,(fecha.isoformat(),))
+    return _buscar_eventos(SQL_BUSCAR_AVISOS_DIA_PENDIENTES, (fecha.isoformat(),))
 
 
 def marcar_aviso_previo_enviado(id):
