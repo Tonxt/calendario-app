@@ -2,6 +2,20 @@ from backend.database import obtener_conexion
 from datetime import time, date
 from backend.models import Evento
 
+COLUMNAS_EVENTO = (
+    "id, nombre, fecha, hora, descripcion, aviso_previo_enviado, aviso_dia_enviado"
+)
+
+SQL_INSERTAR_EVENTO = (
+    "INSERT INTO eventos (nombre, fecha, hora, descripcion) VALUES (?, ?, ?, ?)"
+)
+
+SQL_BUSCAR_POR_ID = f"SELECT {COLUMNAS_EVENTO} FROM eventos WHERE id = ?"
+
+SQL_BUSCAR_POR_FECHA = (
+    f"SELECT {COLUMNAS_EVENTO} FROM eventos WHERE fecha = ? ORDER BY hora"
+)
+
 
 def _hora_a_texto(hora: time | None) -> str | None:
     return None if hora is None else hora.isoformat(timespec="minutes")
@@ -31,7 +45,7 @@ def _fila_a_evento(fila) -> Evento:
 def guardar(evento):
     con = obtener_conexion()
     insercion = con.execute(
-        "INSERT INTO eventos (nombre,fecha,hora,descripcion) VALUES (?,?,?,?)",
+        SQL_INSERTAR_EVENTO,
         (
             evento.nombre,
             evento.fecha.isoformat(),
@@ -48,9 +62,21 @@ def guardar(evento):
 def buscar_por_id(id):
     con = obtener_conexion()
     consulta = con.execute(
-        "SELECT id,nombre,fecha,hora,descripcion,aviso_previo_enviado,aviso_dia_enviado FROM eventos WHERE id=?",
+        SQL_BUSCAR_POR_ID,
         (id,),
     )
     fila = consulta.fetchone()
     con.close()
     return None if fila is None else _fila_a_evento(fila)
+
+
+def buscar_por_fecha(fecha):
+    con = obtener_conexion()
+    consulta = con.execute(
+        SQL_BUSCAR_POR_FECHA,
+        (fecha.isoformat(),),
+    )
+    lista = consulta.fetchall()
+    con.close()
+    eventos = [_fila_a_evento(fila) for fila in lista]
+    return eventos

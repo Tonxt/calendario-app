@@ -1,6 +1,6 @@
 import sqlite3
 
-# pasar conexion y ruta a constantes
+# no olvidar constantes
 
 
 def obtener_conexion():
