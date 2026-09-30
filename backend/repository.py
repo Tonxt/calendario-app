@@ -60,6 +60,15 @@ def _fila_a_evento(fila) -> Evento:
     return evento
 
 
+def _buscar_eventos(sql,valores):
+    con = obtener_conexion()
+    consulta = con.execute(sql,valores)
+    lista_consulta = consulta.fetchall()
+    con.close()
+    eventos = [_fila_a_evento(fila) for fila in lista_consulta]
+    return eventos
+    
+    
 def guardar(evento):
     con = obtener_conexion()
     insercion = con.execute(
@@ -89,26 +98,11 @@ def buscar_por_id(id):
 
 
 def buscar_por_fecha(fecha):
-    con = obtener_conexion()
-    consulta = con.execute(
-        SQL_BUSCAR_POR_FECHA,
-        (fecha.isoformat(),),
-    )
-    lista = consulta.fetchall()
-    con.close()
-    eventos = [_fila_a_evento(fila) for fila in lista]
-    return eventos
+    return _buscar_eventos(SQL_BUSCAR_POR_FECHA,(fecha.isoformat(),))
 
 
 def buscar_entre_fechas(desde, hasta):
-    con = obtener_conexion()
-    consulta = con.execute(
-        SQL_BUSCAR_ENTRE_FECHAS, (desde.isoformat(), hasta.isoformat())
-    )
-    lista = consulta.fetchall()
-    con.close()
-    eventos = [_fila_a_evento(fila) for fila in lista]
-    return eventos
+    return _buscar_eventos(SQL_BUSCAR_ENTRE_FECHAS,(desde.isoformat(),hasta.isoformat()))
 
 
 def actualizar(evento):
@@ -137,27 +131,10 @@ def eliminar(id):
 
 
 def buscar_avisos_previos_pendientes(fecha):
-    con = obtener_conexion()
-    consulta = con.execute(
-        SQL_BUSCAR_AVISOS_PREVIOS_PENDIENTES,
-        (fecha.isoformat(),),
-    )
-    lista = consulta.fetchall()
-    con.close()
-    eventos = [_fila_a_evento(fila) for fila in lista]
-    return eventos
-
+    return _buscar_eventos(SQL_BUSCAR_AVISOS_PREVIOS_PENDIENTES,(fecha.isoformat(),))
 
 def buscar_avisos_dia_pendientes(fecha):
-    con = obtener_conexion()
-    consulta = con.execute(
-        SQL_BUSCAR_AVISOS_DIA_PENDIENTES,
-        (fecha.isoformat(),),
-    )
-    lista = consulta.fetchall()
-    con.close()
-    eventos = [_fila_a_evento(fila) for fila in lista]
-    return eventos
+    return _buscar_eventos(SQL_BUSCAR_AVISOS_DIA_PENDIENTES,(fecha.isoformat(),))
 
 
 def marcar_aviso_previo_enviado(id):
