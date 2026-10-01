@@ -152,3 +152,4 @@ def marcar_aviso_dia_enviado(id):
     con.execute(SQL_MARCAR_AVISO_DIA_ENVIADO, (id,))
     con.commit()
     con.close()
+    
