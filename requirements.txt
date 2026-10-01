@@ -1,1 +1,2 @@
 # Dependencias del proyecto (las instalamos a medida que las necesitemos)
+"plyer==2.1.0"

@@ -63,6 +63,4 @@ def eventos_del_dia(fecha):
 
 def eventos_del_mes(anio, mes):
     ultimo_dia = calendar.monthrange(anio, mes)[1]
-    return buscar_entre_fechas(date(anio,mes,1),date(anio,mes,ultimo_dia))
-    
-    
+    return buscar_entre_fechas(date(anio, mes, 1), date(anio, mes, ultimo_dia))
