@@ -1,4 +1,20 @@
 import customtkinter as ctk
+from datetime import date
+
+MESES = (
+    "Enero",
+    "Febrero",
+    "Marzo",
+    "Abril",
+    "Mayo",
+    "Junio",
+    "Julio",
+    "Agosto",
+    "Septiembre",
+    "Octubre",
+    "Noviembre",
+    "Diciembre",
+)
 
 
 class App(ctk.CTk):
@@ -14,3 +30,20 @@ class App(ctk.CTk):
         self.grilla.grid(row=1, column=1, sticky="nsew")
         self.grid_rowconfigure(1, weight=1)
         self.grid_columnconfigure(1, weight=1)
+        self.anio = date.today().year
+        self.mes = date.today().month
+        ctk.CTkButton(self.barra_superior, text="Hoy", width=40).grid(
+            row=0, column=0, padx=5, pady=10
+        )
+        ctk.CTkButton(self.barra_superior, text="◀", width=40).grid(
+            row=0, column=1, padx=5, pady=10
+        )
+        ctk.CTkButton(self.barra_superior, text="▶", width=40).grid(
+            row=0, column=2, padx=5, pady=10
+        )
+        self.titulo_mes = ctk.CTkLabel(
+            self.barra_superior,
+            text=f"{MESES[self.mes-1]} {self.anio}",
+            font=ctk.CTkFont(size=20, weight="bold"),
+        )
+        self.titulo_mes.grid(row=0, column=3, padx=5, pady=10)
