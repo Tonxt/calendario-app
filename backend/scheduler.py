@@ -6,6 +6,7 @@ from backend.repository import (
     marcar_aviso_previo_enviado,
 )
 from backend.notifier import notificar
+from apscheduler.schedulers.background import BackgroundScheduler
 
 
 def revisar_avisos() -> None:
@@ -23,4 +24,11 @@ def revisar_avisos() -> None:
             titulo=pendiente.nombre, mensaje=f"Hoy, {pendiente.fecha.strftime('%d/%m')}"
         )
         marcar_aviso_dia_enviado(pendiente.id)
-    
+
+
+def iniciar() -> BackgroundScheduler:
+    revisar_avisos()
+    scheduler = BackgroundScheduler()
+    scheduler.add_job(revisar_avisos, "interval", minutes=5)
+    scheduler.start()
+    return scheduler
