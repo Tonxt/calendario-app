@@ -1,3 +1,4 @@
 # Dependencias del proyecto (las instalamos a medida que las necesitemos)
 "plyer==2.1.0"
 "apscheduler==3.11.3"
+"customtkinter==6.0.0"
