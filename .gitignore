@@ -11,3 +11,9 @@ data/*.db
 
 # Editor
 .vscode/
+
+# Pruebas
+.pytest_cache/
+
+# Capturas que deja Claude
+Claude outputs/

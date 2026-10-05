@@ -9,6 +9,8 @@ def obtener_conexion():
 
 
 def crear_tablas():
+    # Si la carpeta data/ no existe, SQLite no puede crear el archivo adentro.
+    RUTA_BD.parent.mkdir(parents=True, exist_ok=True)
     con = obtener_conexion()
     con.execute("""CREATE TABLE IF NOT EXISTS eventos (
         id INTEGER PRIMARY KEY AUTOINCREMENT,

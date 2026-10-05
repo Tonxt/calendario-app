@@ -1,4 +1,9 @@
 # Dependencias del proyecto (las instalamos a medida que las necesitemos)
-"plyer==2.1.0"
-"apscheduler==3.11.3"
-"customtkinter==6.0.0"
+plyer==2.1.0
+apscheduler==3.11.3
+customtkinter==6.0.0
+pystray==0.19.5
+pillow==12.3.0
+
+# Solo para correr las pruebas
+pytest==9.1.1
